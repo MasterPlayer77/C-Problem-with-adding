@@ -1,0 +1,85 @@
+<View style={styles.login_form}> 
+                <Button title="الرجوع" onPress={() => navigation.goBack()}/>
+                <Formik 
+                    initialValues={{email: '', password: '', username: '', fullName: ''}}
+                    validationSchema={registerSchema}
+                    onSubmit={(values) => {
+                        dispatch(authAction.registerUser(values))
+                        .then(async (result) => {
+                            if(result.sucess){
+                                try{
+                                    await AsyncStorage.setItem('token', result.token);
+                                    navigation.navigate('Profile')
+                                } catch(err ){
+                                    console.log(err);
+                                }
+
+                            } else{
+                                console.log(result);
+                                Alert.alert(result.message)
+                            }
+                        })
+                        .catch(err => console.log(err))
+                    }}
+
+                >
+                    {(props) => (
+                        <View style={{width: '100%'}}>
+                            <Input
+                                placeholder='Email'
+                                leftIcon={{ type: 'Ionicons', name: 'mail-outline' }}
+                                style={styles.input}
+                                placeholderStyle={styles.textboxfieldd}
+                                value={props.values.email}
+                                onChangeText={props.handleChange('email')}
+                                onBlur={props.handleBlur('email')}
+                                onFocus={() => SetVoidView(false)}
+                            />
+                                <Text style={styles.errorText}>{props.touched.email && props.errors.email}</Text>
+
+                            <Input
+                                placeholder='Username'
+                                leftIcon={{ type: 'Ionicons', name: 'person' }}
+                                style={styles.input}
+                                placeholderStyle={styles.textboxfieldd}
+                                value={props.values.username}
+                                onChangeText={props.handleChange('username')}
+                                onBlur={props.handleBlur('username')}
+                                onFocus={() => SetVoidView(false)}
+
+
+
+                            />
+                            <Text style={styles.errorText}>{props.touched.username && props.errors.username}</Text>
+
+                            <Input
+                                placeholder='FullName'
+                                leftIcon={{ type: 'Ionicons', name: 'person' }}
+                                style={styles.input}
+                                placeholderStyle={styles.textboxfieldd}
+                                value={props.values.fullName}
+                                onChangeText={props.handleChange('fullName')}
+                                onBlur={props.handleBlur('fullName')}
+                                onFocus={() => SetVoidView(true)}
+                            />
+                            <Text style={styles.errorText}>{props.touched.fullName && props.errors.fullName}</Text>
+
+                            <Input placeholder="Password" 
+                                secureTextEntry={true} 
+                                leftIcon={{type: 'Ionicons', name: 'lock'}} 
+                                style={styles.input} value={props.values.password} 
+                                onChangeText={props.handleChange('password')} 
+                                onBlur={props.handleBlur('password')}
+                                onFocus={() => SetVoidView(true)}
+                            />
+                            <Text style={styles.errorText}>{props.touched.password && props.errors.password}</Text>
+                           
+                            {/* <Button title="تسجيل حساب جديد" onPress={props.handleSubmit} loading={true}/>          */}
+
+                        </View>
+                    )}
+                </Formik>
+
+                {/* <Input placeholder="Confirm password" secureTextEntry={true} leftIcon={{type: 'Ionicons', name: 'lock'}} style={styles.input}/> */}
+                {/* <Flatbtn title="الخطوة التالية" Handlebtn={() => navigation.navigate('Home')}/> */}
+            </View>
